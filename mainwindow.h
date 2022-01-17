@@ -20,7 +20,7 @@ class MainWindow : public QMainWindow
     QTimer *timer;
     QTime *time;
     QSerialPort mSerialInput;
-    QSerialPort mSerialOutput;
+//    QSerialPort mSerialOutput;
 public:
     MainWindow(QWidget *parent = nullptr);
     void initializeSerialPort();
@@ -32,7 +32,7 @@ public slots:
     void timerHit();
 private slots:
     void readDataInput();
-    void readDataOutput();
+//    void readDataOutput();
     void writeDataInput(const QByteArray &data);
     void clearAll();
 private:

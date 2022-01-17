@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     this->startListenerGate();
     this->ui->pushButtonClear->setDisabled(true);
     QObject::connect(&mSerialInput, SIGNAL(readyRead()), this,SLOT(readDataInput()));
-    QObject::connect(&mSerialOutput, SIGNAL(readyRead()), this,SLOT(readDataOutput()));
+//    QObject::connect(&mSerialOutput, SIGNAL(readyRead()), this,SLOT(readDataOutput()));
     QObject::connect(ui->pushButtonClear, SIGNAL(clicked()), this, SLOT(clearAll()));
     QObject::connect(timer, SIGNAL(timeout()), this, SLOT(timerHit()));
 
@@ -23,12 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::startListenerGate()
 {
     if (mSerialInput.open(QIODevice::ReadWrite)) {
-//        if (mSerialOutput.open(QIODevice::ReadWrite)) {
 
-//        }else {
-//            QMessageBox::critical(this, tr("Error"), mSerialInput.errorString());
-//            exit(1);
-//        }
     } else {
         QMessageBox::critical(this, tr("Error"), mSerialInput.errorString());
         exit(1);
@@ -45,20 +40,11 @@ void MainWindow::initializeSerialPort()
 //    mSerialInput.setStopBits(QSerialPort::OneStop);
 //    mSerialInput.setFlowControl(QSerialPort::NoFlowControl);
 
-    mSerialOutput.setPortName("ttyACM1");
-//    mSerialOutput.open(QIODevice::WriteOnly);
-    mSerialOutput.setBaudRate(9600);
-//    mSerialOutput.setDataBits(QSerialPort::Data8);
-//    mSerialOutput.setParity(QSerialPort::NoParity);
-//    mSerialOutput.setStopBits(QSerialPort::OneStop);
-//    mSerialOutput.setFlowControl(QSerialPort::NoFlowControl);
 }
 void MainWindow::closeSerialPort()
 {
     if (mSerialInput.isOpen())
         mSerialInput.close();
-    if (mSerialOutput.isOpen())
-        mSerialOutput.close();
 }
 void MainWindow::writeDataInput(const QByteArray &data)
 {
@@ -82,17 +68,10 @@ void MainWindow::readDataInput()
         this->ui->pushButtonClear->setDisabled(true);
         time=new QTime(0,0);
         this->timer->start(10);
-    }
-}
-void MainWindow::readDataOutput()
-{
-    const QByteArray data = mSerialInput.readAll();
-    qDebug()<<data;
-    if (data=="1"){
+    }else if(data=="0"){
         qDebug()<<data;
         timer->stop();
         this->ui->pushButtonClear->setEnabled(true);
-
     }
 }
 MainWindow::~MainWindow()
